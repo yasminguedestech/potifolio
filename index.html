@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yasmin Guedes — Analista de Dados.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --bg:#0F0E1A;
+  --surface:#181626;
+  --surface2:#211E35;
+  --border:#302C4A;
+  --text:#F0EEF8;
+  --muted:#A09BBF;
+  --muted2:#6A647F;
+  --accent:#C4B5FD;
+  --accent2:#A78BFA;
+  --accent3:#7C3AED;
+  --tag-bg:#1E1B30;
+  --tag-text:#B0AECC;
+  --glow:rgba(196,181,253,0.18);
+  --transition-speed:0.45s;
+}
+
+body.light{
+  --bg:#F5F4FF;
+  --surface:#FFFFFF;
+  --surface2:#EDE9FE;
+  --border:#D4D0EE;
+  --text:#1A1825;
+  --muted:#6B6880;
+  --muted2:#9B98B0;
+  --accent:#7C3AED;
+  --accent2:#6D28D9;
+  --accent3:#5B21B6;
+  --tag-bg:#EDE9FE;
+  --tag-text:#5B5780;
+  --glow:rgba(124,58,237,0.15);
+}
+
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.6;
+  transition:background var(--transition-speed) ease, color var(--transition-speed) ease;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none;}
+
+/* ─── CANVAS BACKGROUND ─── */
+#bg-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;opacity:0.55;
+  transition:opacity 0.5s;
+}
+body.light #bg-canvas{opacity:0.25;}
+.page-content{position:relative;z-index:1;}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,14,26,0.88);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:58px;
+  transition:background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+body.light nav{background:rgba(245,244,255,0.88);}
+.nav-logo{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;letter-spacing:-0.01em;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{
+  font-size:13px;font-weight:500;color:var(--muted);
+  letter-spacing:0.05em;text-transform:uppercase;
+  transition:color 0.2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;
+  background:var(--accent);transition:width 0.25s ease;
+}
+.nav-links a:hover{color:var(--text);}
+.nav-links a:hover::after{width:100%;}
+
+/* ─── HAMBURGER ─── */
+.hamburger{
+  display:none;
+  flex-direction:column;justify-content:center;gap:5px;
+  width:36px;height:36px;padding:4px;
+  background:none;border:1.5px solid var(--border);border-radius:10px;
+  cursor:pointer;transition:border-color 0.2s;flex-shrink:0;
+}
+.hamburger:hover{border-color:var(--accent);}
+.hamburger span{
+  display:block;height:1.5px;background:var(--muted);border-radius:2px;
+  transition:transform 0.3s ease, opacity 0.3s ease, background 0.2s;
+}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);background:var(--accent);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);background:var(--accent);}
+
+/* Mobile drawer */
+.mobile-menu{
+  display:none;position:fixed;top:58px;left:0;right:0;
+  background:rgba(15,14,26,0.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:1.2rem 1.5rem 1.5rem;
+  flex-direction:column;gap:0;
+  z-index:99;
+  transform:translateY(-10px);opacity:0;
+  transition:transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s ease;
+  pointer-events:none;
+}
+body.light .mobile-menu{background:rgba(245,244,255,0.97);}
+.mobile-menu.open{
+  display:flex;transform:translateY(0);opacity:1;pointer-events:all;
+}
+.mobile-menu a{
+  display:block;padding:13px 0;
+  font-size:15px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--border);
+  transition:color 0.2s, padding-left 0.2s;
+}
+.mobile-menu a:last-child{border-bottom:none;}
+.mobile-menu a:hover{color:var(--accent);padding-left:6px;}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle{
+  position:relative;width:54px;height:28px;
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:40px;cursor:pointer;
+  transition:background 0.3s, border-color 0.3s;
+  flex-shrink:0;
+}
+.theme-toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--accent);
+  transition:transform 0.35s cubic-bezier(.68,-0.55,.27,1.55), background 0.3s;
+  box-shadow:0 2px 8px var(--glow);
+}
+body.light .theme-toggle::after{transform:translateX(26px);}
+.theme-toggle-icon{
+  position:absolute;top:50%;transform:translateY(-50%);
+  font-size:11px;pointer-events:none;
+  transition:opacity 0.3s;
+}
+.theme-toggle-icon.sun{right:6px;opacity:1;}
+.theme-toggle-icon.moon{left:6px;opacity:0;}
+body.light .theme-toggle-icon.sun{opacity:0;}
+body.light .theme-toggle-icon.moon{opacity:1;}
+
+/* ─── HERO ─── */
+.hero{
+  max-width:980px;margin:0 auto;
+  padding:5rem 2rem 4rem;
+  display:grid;grid-template-columns:1fr 290px;gap:4rem;align-items:center;
+}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.4rem;display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.6rem,5.5vw,4rem);
+  font-weight:800;line-height:1.06;letter-spacing:-0.03em;
+  color:var(--text);margin-bottom:1.4rem;
+}
+.hero h1 .accent{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-bio{font-size:14.5px;color:var(--muted);max-width:440px;line-height:1.8;margin-bottom:2rem;}
+.hero-ctas{display:flex;gap:10px;flex-wrap:wrap;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:40px;
+  font-size:12px;font-weight:600;letter-spacing:0.03em;
+  transition:all 0.25s cubic-bezier(.22,1,.36,1);cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.08);
+  opacity:0;transition:opacity 0.2s;
+}
+.btn:hover::before{opacity:1;}
+.btn:hover{transform:translateY(-2px);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;
+  box-shadow:0 4px 20px var(--glow);
+}
+.btn-primary:hover{box-shadow:0 8px 32px var(--glow);}
+.btn-outline{
+  background:transparent;color:var(--text);
+  border:1.5px solid var(--border);
+}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ─── PHOTO ─── */
+.photo-wrap{
+  width:290px;height:350px;border-radius:24px;overflow:hidden;
+  border:1px solid var(--border);flex-shrink:0;position:relative;
+  transition:transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s;
+  transform-style:preserve-3d;
+}
+.photo-wrap:hover{
+  transform:rotateY(-4deg) rotateX(3deg) translateY(-6px);
+  box-shadow:12px 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--glow);
+}
+.photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;}
+.photo-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom, transparent 55%, rgba(15,14,26,0.65));
+  pointer-events:none;
+}
+body.light .photo-overlay{background:linear-gradient(to bottom, transparent 55%, rgba(245,244,255,0.55));}
+.photo-badge{
+  position:absolute;bottom:16px;left:16px;right:16px;
+  background:rgba(15,14,26,0.82);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(196,181,253,0.2);border-radius:14px;
+  padding:10px 14px;
+  transition:background var(--transition-speed);
+}
+body.light .photo-badge{background:rgba(245,244,255,0.88);}
+.photo-badge-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+.photo-badge-role{font-size:11px;color:var(--accent);margin-top:2px;letter-spacing:0.05em;}
+
+/* ─── DIVIDER ─── */
+.divider{max-width:980px;margin:0 auto;border:none;border-top:1px solid var(--border);transition:border-color var(--transition-speed);}
+
+/* ─── SECTION ─── */
+section{max-width:980px;margin:0 auto;padding:4rem 2rem;}
+.section-label{
+  font-family:'Syne',sans-serif;
+  font-size:1.2rem;font-weight:700;
+  color:var(--accent);margin-bottom:2rem;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::before{content:'';width:22px;height:1.5px;background:var(--accent);}
+
+/* ─── SOBRE ─── */
+.sobre-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.sobre-text{font-size:15px;color:var(--muted);line-height:1.85;}
+.sobre-text p+p{margin-top:1rem;}
+.sobre-text strong{color:var(--text);font-weight:600;}
+.sobre-text .highlight{color:#fff;font-weight:600;}
+body.light .sobre-text .highlight{color:var(--accent3);}
+.sobre-stats{display:flex;flex-direction:column;gap:12px;}
+
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:1.3rem 1.5rem;
+  transition:transform 0.3s cubic-bezier(.22,1,.36,1), border-color 0.3s, box-shadow 0.3s, background var(--transition-speed);
+  cursor:default;
+}
+.stat-card:hover{
+  transform:translateY(-5px) scale(1.015);
+  border-color:var(--accent);
+  box-shadow:0 10px 32px var(--glow);
+}
+.stat-number{
+  font-family:'Syne',sans-serif;font-size:2.1rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.stat-label{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5;}
+
+/* ─── SKILLS ─── */
+.skills-cloud{display:flex;flex-wrap:wrap;gap:8px;}
+.skill-tag{
+  background:var(--tag-bg);color:var(--tag-text);
+  font-size:12px;padding:7px 16px;border-radius:40px;
+  border:1px solid var(--border);
+  transition:all 0.3s cubic-bezier(.22,1,.36,1);
+  cursor:default;
+  opacity:0;transform:translateY(14px) scale(0.94);
+}
+.skill-tag.skill-visible{opacity:1;transform:translateY(0) scale(1);}
+.skill-tag:hover{
+  background:var(--accent);color:#fff;border-color:var(--accent);
+  transform:translateY(-4px) scale(1.08);
+  box-shadow:0 6px 24px var(--glow);
+}
+.skill-highlight{
+  font-weight:600;color:var(--text);
+  border-color:var(--muted2);
+  background:var(--surface2);
+}
+
+/* ─── PROJECTS ─── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.project-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:1.5rem;display:flex;flex-direction:column;gap:10px;
+  transition:all 0.35s cubic-bezier(.22,1,.36,1);
+  transform-style:preserve-3d;
+  position:relative;overflow:hidden;
+}
+.project-card::after{
+  content:'';position:absolute;top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%), var(--glow), transparent 60%);
+  opacity:0;transition:opacity 0.3s;pointer-events:none;
+}
+.project-card:hover::after{opacity:1;}
+.project-card:hover{
+  border-color:var(--accent);
+  transform:translateY(-6px);
+  box-shadow:0 16px 48px rgba(0,0,0,0.25), 0 0 0 1px var(--accent);
+}
+.project-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.project-icon{
+  width:40px;height:40px;border-radius:12px;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+  transition:transform 0.3s cubic-bezier(.22,1,.36,1);
+}
+.project-card:hover .project-icon{transform:scale(1.15) rotate(-5deg);}
+.badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:40px;flex-shrink:0;letter-spacing:0.04em;}
+.badge-done{background:#0F2E1A;color:#4ADE80;border:1px solid #1A4A28;}
+.badge-wip{background:#2C1F08;color:#F59E0B;border:1px solid #44300A;}
+.project-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+.project-desc{font-size:13px;color:var(--muted);line-height:1.7;flex:1;}
+.project-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.ptag{font-size:11px;color:var(--muted2);background:var(--tag-bg);border-radius:6px;padding:2px 8px;border:1px solid var(--border);transition:background var(--transition-speed),border-color var(--transition-speed);}
+.project-link{
+  font-size:12px;font-weight:600;color:var(--accent);
+  display:inline-flex;align-items:center;gap:5px;margin-top:4px;
+  opacity:0.8;transition:opacity 0.2s, gap 0.2s;
+}
+.project-link:hover{opacity:1;gap:8px;}
+
+/* ─── CERTS ─── */
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.cert-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:6px;
+  transition:all 0.3s cubic-bezier(.22,1,.36,1);
+  opacity:0;transform:translateY(22px);
+  position:relative;overflow:hidden;
+}
+.cert-card.cert-visible{opacity:1;transform:translateY(0);}
+.cert-card::before{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(196,181,253,0.07),transparent);
+  transition:left 0.5s ease;
+}
+.cert-card:hover::before{left:140%;}
+.cert-card:hover{
+  border-color:var(--accent);
+  transform:translateY(-4px) scale(1.012);
+  box-shadow:0 8px 28px var(--glow);
+}
+.cert-platform{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:2px;}
+.cert-name{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;}
+.cert-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ─── CONTACT ─── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.contact-info{display:flex;flex-direction:column;gap:14px;}
+.contact-link{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13px;color:var(--muted);
+  transition:all 0.25s cubic-bezier(.22,1,.36,1);
+}
+.contact-link:hover{border-color:var(--accent);color:var(--text);transform:translateX(5px);box-shadow:0 4px 20px var(--glow);}
+.contact-link-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.25s;}
+.contact-link:hover .contact-link-icon{transform:scale(1.12);}
+.contact-link-icon.whatsapp{background:#0F2A1A;color:#25D366;}
+.contact-link-icon.email{background:#1F1A35;color:var(--accent);}
+.contact-link-icon.linkedin{background:#0A1929;color:#4B9FE1;}
+.contact-link-text{display:flex;flex-direction:column;gap:2px;}
+.contact-link-label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;opacity:0.55;}
+.contact-link-value{font-size:13px;color:var(--text);}
+
+/* ─── FORM ─── */
+.contact-form{display:flex;flex-direction:column;gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);}
+.form-input,.form-textarea,.form-select{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  font-size:13px;color:var(--text);font-family:'Inter',sans-serif;
+  transition:border-color 0.2s, background var(--transition-speed), color var(--transition-speed);
+  outline:none;resize:none;
+}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--muted2);}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--accent);}
+.form-textarea{min-height:110px;}
+.form-select{appearance:none;cursor:pointer;width:100%;}
+.form-submit{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:40px;padding:12px 24px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  transition:all 0.25s;letter-spacing:0.03em;
+  box-shadow:0 4px 20px var(--glow);
+}
+.form-submit:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--glow);}
+.form-success{display:none;text-align:center;padding:20px;color:var(--accent);font-size:14px;font-weight:500;}
+
+/* ─── COMMUNITY ─── */
+.two-col-section{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.6rem;display:flex;flex-direction:column;gap:14px;transition:background var(--transition-speed),border-color var(--transition-speed);}
+.panel-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);}
+.suggestion-item,.connection-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;transition:background var(--transition-speed),border-color var(--transition-speed);}
+.connection-card{flex-direction:row;align-items:flex-start;gap:12px;}
+.suggestion-header{display:flex;justify-content:space-between;align-items:center;}
+.suggestion-category{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);background:rgba(196,181,253,0.1);padding:2px 8px;border-radius:20px;}
+.suggestion-date{font-size:10px;color:var(--muted2);}
+.suggestion-text{font-size:13px;color:var(--text);line-height:1.5;}
+.suggestion-author{font-size:11px;color:var(--muted2);}
+.suggestions-feed,.connections-feed{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;}
+.suggestions-feed::-webkit-scrollbar,.connections-feed::-webkit-scrollbar{width:4px;}
+.suggestions-feed::-webkit-scrollbar-thumb,.connections-feed::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.connection-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;flex-shrink:0;}
+.connection-info{display:flex;flex-direction:column;gap:4px;}
+.connection-name{font-size:13px;font-weight:600;color:var(--text);}
+.connection-type{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px;}
+.connection-type-recruiter{background:#0A1929;color:#4B9FE1;}
+.connection-type-colega{background:rgba(196,181,253,0.1);color:var(--accent);}
+.connection-type-mentor{background:#0F2A1A;color:#25D366;}
+.connection-type-parceiro{background:#2C1F08;color:#F59E0B;}
+.connection-type-outro{background:var(--border);color:var(--muted);}
+.connection-message{font-size:12px;color:var(--muted);font-style:italic;line-height:1.5;margin-top:2px;}
+
+/* ─── SCROLL ANIM ─── */
+.scroll-anim{
+  opacity:0;transform:translateY(24px);
+  transition:opacity 0.6s cubic-bezier(.22,1,.36,1), transform 0.6s cubic-bezier(.22,1,.36,1);
+}
+.scroll-anim.visible{opacity:1;transform:translateY(0);}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideRight{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0);}}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px var(--glow);}50%{box-shadow:0 4px 36px rgba(196,181,253,0.45);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+nav{animation:fadeIn 0.4s ease both;}
+.hero>div:first-child{animation:fadeUp 0.7s ease both;}
+.photo-wrap{animation:slideRight 0.7s ease 0.2s both;}
+.hero-bio{animation:fadeUp 0.6s ease 0.25s both;}
+.hero-ctas{animation:fadeUp 0.6s ease 0.35s both;}
+.btn-primary{animation:pulse 3s ease-in-out 1s infinite;}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);
+  padding:2.5rem 2rem;text-align:center;
+  font-size:12px;color:var(--muted);
+  transition:border-color var(--transition-speed),color var(--transition-speed);
+}
+footer a{color:var(--accent);opacity:0.8;transition:opacity 0.2s;}
+footer a:hover{opacity:1;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:720px){
+  .hero{grid-template-columns:1fr;padding:3rem 1.5rem 2.5rem;gap:2.5rem;}
+  .photo-wrap{width:100%;height:280px;animation:fadeUp 0.7s ease 0.1s both;}
+  .photo-wrap:hover{transform:none;}
+  .sobre-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .two-col-section{grid-template-columns:1fr;}
+  section{padding:3rem 1.5rem;}
+  .hero h1{font-size:2.4rem;}
+}
+@media(max-width:640px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+}
+</style>
+</head>
+<body>
+
+<!-- Three.js background -->
+<canvas id="bg-canvas"></canvas>
+
+<div class="page-content">
+
+<nav>
+  <span class="nav-logo">Yasmin Guedes</span>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#habilidades">Skills</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#certificacoes">Certs</a></li>
+    <li><a href="#contato">Contato</a></li>
+    <li><a href="https://www.linkedin.com/in/yasmin-guedes-0101/" target="_blank">LinkedIn ↗</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+      <span class="theme-toggle-icon sun">☀️</span>
+      <span class="theme-toggle-icon moon">🌙</span>
+    </button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#sobre" class="mobile-link">Sobre</a>
+  <a href="#habilidades" class="mobile-link">Skills</a>
+  <a href="#projetos" class="mobile-link">Projetos</a>
+  <a href="#certificacoes" class="mobile-link">Certificações</a>
+  <a href="#contato" class="mobile-link">Contato</a>
+  <a href="https://www.linkedin.com/in/yasmin-guedes-0101/" target="_blank" class="mobile-link">LinkedIn ↗</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <p class="hero-eyebrow">São Paulo, SP &nbsp;·&nbsp; <strong style="font-size:16px;letter-spacing:0.03em;font-weight:500;color:var(--accent);text-transform:uppercase;">. Data Analyst</strong></p>
+    <h1>
+      <span id="w1" style="display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease,transform 0.5s ease;">Dados</span>
+      <span id="w2" style="display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease 0.1s,transform 0.5s ease 0.1s;">&amp;</span>
+      <span id="w3" style="display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease 0.2s,transform 0.5s ease 0.2s;" class="accent">Produto.</span>
+      <br>
+      <span id="w4" style="display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease 0.35s,transform 0.5s ease 0.35s;">Decisões</span>
+      <span id="w5" style="display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease 0.45s,transform 0.5s ease 0.45s;">que</span>
+      <br>
+      <span id="w6" style="display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease 0.55s,transform 0.5s ease 0.55s;" class="accent">fazem sentido.</span>
+    </h1>
+    <p class="hero-bio">
+      Dados bem interpretados mudam produtos. Produtos bem construídos mudam decisões. É nesse movimento que eu atuo — conectando análise, IA e visão de negócio para gerar impacto real no mercado tech
+    </p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="https://www.linkedin.com/in/yasmin-guedes-0101/" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a class="btn btn-outline" href="https://github.com/yasminguedestech" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-outline" href="mailto:yasminguedestech@gmail.com">
+        ✉ yasminguedestech@gmail.com
+      </a>
+    </div>
+  </div>
+
+  <div>
+    <div class="photo-wrap" id="photoWrap">
+      <img src="./assets/foto.jpeg" alt="Yasmin Guedes" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--surface2),var(--surface))'"/>
+      <div class="photo-overlay"></div>
+      <div class="photo-badge">
+        <div class="photo-badge-name">Yasmin Guedes</div>
+        <div class="photo-badge-role">Data Analyst</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <p class="section-label scroll-anim">Sobre</p>
+  <div class="sobre-grid">
+    <div class="sobre-text scroll-anim">
+      <p>
+        Tenho background em suporte administrativo e gestão de processos — áreas que me ensinaram a enxergar padrões, organizar informação e questionar o que pode ser melhorado. Hoje, estou canalizando essa bagagem para o mundo de dados e produto.
+      </p>
+      <p>
+        Trabalho com <strong>Python, SQL, Power BI</strong> e ferramentas ágeis no dia a dia. Não parto do zero: sei o que é operar sob pressão, estruturar fluxos e tomar decisão com informação incompleta. Agora quero fazer isso com dados de verdade.
+      </p>
+      <p>
+        Estou construindo projetos que cruzam análise de dados com visão de produto — <span class="highlight">porque acredito que o diferencial não está só em saber programar, mas em entender por que aquele número importa.</span>
+      </p>
+    </div>
+    <div class="sobre-stats">
+      <div class="stat-card scroll-anim">
+        <div class="stat-number" data-target="100" data-suffix="h+">0h</div>
+        <div class="stat-label">de formação prática em análise, visualização e BI</div>
+      </div>
+      <div class="stat-card scroll-anim">
+        <div class="stat-number" data-target="10" data-suffix="">0</div>
+        <div class="stat-label">certificações concluídas em dados, BI e produto</div>
+      </div>
+      <div class="stat-card scroll-anim">
+        <div class="stat-number" data-target="5" data-suffix="">0</div>
+        <div class="stat-label">projetos em andamento ou concluídos no portfólio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- HABILIDADES -->
+<section id="habilidades">
+  <p class="section-label scroll-anim">Skills</p>
+  <div class="skills-cloud">
+    <span class="skill-tag skill-highlight">🐍 Python</span>
+    <span class="skill-tag skill-highlight">🗃️ SQL</span>
+    <span class="skill-tag skill-highlight">📊 Power BI</span>
+    <span class="skill-tag skill-highlight">🐼 Pandas</span>
+    <span class="skill-tag skill-highlight">📈 Matplotlib</span>
+    <span class="skill-tag skill-highlight">📑 Excel</span>
+    <span class="skill-tag">🌿 Git</span>
+    <span class="skill-tag">💻 GitHub</span>
+    <span class="skill-tag">☁️ AWS</span>
+    <span class="skill-tag">🗄️ BigQuery</span>
+    <span class="skill-tag">🎯 Jira</span>
+    <span class="skill-tag">📋 Trello</span>
+    <span class="skill-tag">📧 Google Workspace</span>
+    <span class="skill-tag">🔢 Big Data</span>
+    <span class="skill-tag">📉 Business Intelligence</span>
+    <span class="skill-tag">🔄 Scrum</span>
+    <span class="skill-tag">📝 Kanban</span>
+    <span class="skill-tag">⚡ Lean</span>
+    <span class="skill-tag">🏢 ERP TOTVS</span>
+    <span class="skill-tag">🤝 Customer Success</span>
+    <span class="skill-tag">🌐 Inglês</span>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <p class="section-label scroll-anim">Projetos</p>
+  <div class="projects-grid">
+
+    <div class="project-card scroll-anim">
+      <div class="project-top">
+        <div class="project-icon">📉</div>
+        <span class="badge badge-done">Concluído</span>
+      </div>
+      <p class="project-name">Análise de Churn de Usuários</p>
+      <p class="project-desc">Por que usuários abandonam um app? Simulação com 300 clientes analisando taxa de churn por plano, faixa de uso e tempo de atividade. Resultado: identificação dos 3 principais gatilhos de cancelamento.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span><span class="ptag">Pandas</span><span class="ptag">Matplotlib</span><span class="ptag">SQL</span>
+      </div>
+      <a class="project-link" href="https://github.com/yasminguedestech/analise-churn" target="_blank">
+        Ver no GitHub ↗
+      </a>
+    </div>
+
+    <div class="project-card scroll-anim">
+      <div class="project-top">
+        <div class="project-icon">📈</div>
+        <span class="badge badge-done">Concluído</span>
+      </div>
+      <p class="project-name">Análise de Ações — PETR4</p>
+      <p class="project-desc">Análise exploratória do histórico de 2 anos da Petrobras — preços de fechamento, médias móveis de 30 e 90 dias e volume de negociações. Geração de insights sobre padrões de volatilidade.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span><span class="ptag">Pandas</span><span class="ptag">yFinance</span><span class="ptag">Seaborn</span>
+      </div>
+      <a class="project-link" href="https://github.com/yasminguedestech/analise-petr4" target="_blank">
+        Ver no GitHub ↗
+      </a>
+    </div>
+
+    <div class="project-card scroll-anim">
+      <div class="project-top">
+        <div class="project-icon">🎯</div>
+        <span class="badge badge-wip">Em andamento</span>
+      </div>
+      <p class="project-name">Dashboard de Priorização — RICE</p>
+      <p class="project-desc">Dashboard que aplica o framework RICE para ranquear features automaticamente. Une visão de produto com tomada de decisão baseada em dados — mostrando qual próximo passo gera mais impacto.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span><span class="ptag">Power BI</span><span class="ptag">Dashboard</span>
+      </div>
+    </div>
+
+    <div class="project-card scroll-anim">
+      <div class="project-top">
+        <div class="project-icon">💬</div>
+        <span class="badge badge-wip">Em andamento</span>
+      </div>
+      <p class="project-name">Classificador de Feedbacks com IA</p>
+      <p class="project-desc">Cola feedbacks de usuários e o app classifica por tema, sentimento e prioridade — automatizando a triagem que todo time de produto faz manualmente, com insights acionáveis por categoria.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span><span class="ptag">NLP</span><span class="ptag">IA</span>
+      </div>
+    </div>
+
+    <div class="project-card scroll-anim">
+      <div class="project-top">
+        <div class="project-icon">🛒</div>
+        <span class="badge badge-wip">Em andamento</span>
+      </div>
+      <p class="project-name">Análise de Funil de Conversão — E-commerce</p>
+      <p class="project-desc">A empresa percebia queda nas vendas mas não sabia onde. Mapeei cada etapa do funil e identifiquei que a conversão caía <strong>42% na etapa de cadastro</strong> — o principal gargalo. Com base nisso, recomendei simplificação do formulário e implementação de login social.</p>
+      <div class="project-tags">
+        <span class="ptag">SQL</span><span class="ptag">Python</span><span class="ptag">Power BI</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- CERTIFICAÇÕES -->
+<section id="certificacoes">
+  <p class="section-label scroll-anim">Certificações</p>
+  <div class="certs-grid">
+    <div class="cert-card"><p class="cert-platform">Udemy</p><p class="cert-name">Power BI Completo — Do Básico ao Avançado</p><p class="cert-meta">João Paulo de Lira · 10h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">IBM</p><p class="cert-name">Python 101 for Data Science</p><p class="cert-meta">10h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">FIAP</p><p class="cert-name">Nano Course Big Data &amp; Analytics</p><p class="cert-meta">60h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">FIAP</p><p class="cert-name">Business Intelligence (BI)</p><p class="cert-meta">40h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">Microsoft</p><p class="cert-name">Criar relatórios eficazes no Power BI</p><p class="cert-meta">40h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">Rocketseat</p><p class="cert-name">Power BI com IA</p><p class="cert-meta">6h · Jun 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">FGV</p><p class="cert-name">Fundamentos da gestão por processos</p><p class="cert-meta">14h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">FGV</p><p class="cert-name">Kanban e ferramentas ágeis de gestão</p><p class="cert-meta">Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">Udemy</p><p class="cert-name">Ferramentas para um Product Owner</p><p class="cert-meta">8,5h · Mai 2026</p></div>
+    <div class="cert-card"><p class="cert-platform">Udemy</p><p class="cert-name">Customer Success na prática</p><p class="cert-meta">2h · Mai 2026</p></div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- CONTATO -->
+<section id="contato">
+  <p class="section-label scroll-anim">Contato</p>
+  <div class="contact-grid">
+    <div class="contact-info scroll-anim">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:6px;line-height:1.2;">Vamos conversar?</h2>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px;">Aberta a oportunidades em dados e produto. Me manda uma mensagem!</p>
+      <a class="contact-link" href="https://wa.me/5511952886949" target="_blank">
+        <div class="contact-link-icon whatsapp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        <div class="contact-link-text"><span class="contact-link-label">WhatsApp</span><span class="contact-link-value">(11) 95288-6949</span></div>
+      </a>
+      <a class="contact-link" href="mailto:yasminguedestech@gmail.com">
+        <div class="contact-link-icon email"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
+        <div class="contact-link-text"><span class="contact-link-label">E-mail</span><span class="contact-link-value">yasminguedestech@gmail.com</span></div>
+      </a>
+      <a class="contact-link" href="https://www.linkedin.com/in/yasmin-guedes-0101/" target="_blank">
+        <div class="contact-link-icon linkedin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+        <div class="contact-link-text"><span class="contact-link-label">LinkedIn</span><span class="contact-link-value">linkedin.com/in/yasmin-guedes-0101</span></div>
+      </a>
+    </div>
+    <div class="scroll-anim">
+      <form class="contact-form" id="contactForm">
+        <div class="form-group"><label class="form-label">Nome</label><input class="form-input" type="text" placeholder="Seu nome" required/></div>
+        <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" type="email" placeholder="seu@email.com" required/></div>
+        <div class="form-group"><label class="form-label">Mensagem</label><textarea class="form-textarea" placeholder="Conta um pouco sobre a oportunidade..." required></textarea></div>
+        <button class="form-submit" type="submit">Enviar mensagem →</button>
+        <div class="form-success" id="formSuccess">✅ Mensagem enviada! Entrarei em contato em breve.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- COMUNIDADE -->
+<section id="comunidade">
+  <p class="section-label scroll-anim">Comunidade</p>
+  <div class="two-col-section">
+    <div class="scroll-anim">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:6px;">💡 Sugestões</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Tem uma ideia de projeto, tema de análise ou feedback? Deixa aqui!</p>
+      <div class="suggestions-feed" id="suggestionsList"></div>
+      <form class="contact-form" id="suggestionForm" style="margin-top:16px;">
+        <div class="form-group"><label class="form-label">Seu nome</label><input class="form-input" id="sug_name" type="text" placeholder="Como quer ser chamado?"/></div>
+        <div class="form-group"><label class="form-label">Categoria</label>
+          <select class="form-select" id="sug_category">
+            <option value="💡 Ideia de projeto">💡 Ideia de projeto</option>
+            <option value="📊 Tema de análise">📊 Tema de análise</option>
+            <option value="🎨 Feedback do portfólio">🎨 Feedback do portfólio</option>
+            <option value="🔧 Melhoria técnica">🔧 Melhoria técnica</option>
+            <option value="💬 Outro">💬 Outro</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Sugestão</label><textarea class="form-textarea" id="sug_text" placeholder="Escreve aqui..." required style="min-height:80px;"></textarea></div>
+        <button class="form-submit" type="submit">Enviar sugestão →</button>
+      </form>
+    </div>
+
+    <div class="scroll-anim">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:6px;">🤝 Network</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Quer se conectar? Me conta quem você é — conexões com contexto valem muito mais!</p>
+      <div class="connections-feed" id="connectionsList"></div>
+      <form class="contact-form" id="networkForm" style="margin-top:16px;">
+        <div class="form-group"><label class="form-label">Seu nome</label><input class="form-input" id="net_name" type="text" placeholder="Nome ou como prefere ser chamado" required/></div>
+        <div class="form-group"><label class="form-label">Você é...</label>
+          <select class="form-select" id="net_type">
+            <option value="recruiter">👔 Recrutador(a)</option>
+            <option value="colega">📊 Colega de dados</option>
+            <option value="mentor">🎓 Mentor(a)</option>
+            <option value="parceiro">🚀 Parceiro(a) de projeto</option>
+            <option value="outro">✨ Outro</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">LinkedIn (opcional)</label><input class="form-input" id="net_linkedin" type="url" placeholder="https://linkedin.com/in/seu-perfil"/></div>
+        <div class="form-group"><label class="form-label">Mensagem (opcional)</label><textarea class="form-textarea" id="net_message" placeholder="Conta um pouco sobre você..." style="min-height:80px;"></textarea></div>
+        <button class="form-submit" type="submit">Quero me conectar →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="margin-bottom:6px;">Yasmin Guedes · São Paulo, SP</p>
+  <p style="margin-bottom:10px;"><a href="mailto:yasminguedestech@gmail.com">yasminguedestech@gmail.com</a></p>
+  <p style="font-size:13px;color:var(--muted2);margin-top:10px;line-height:1.7;">Obrigada por fazer parte desta etapa da minha trajetória. 💜</p>
+  <div style="margin-top:18px;display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--muted2);letter-spacing:0.04em;opacity:0.7;">
+    <span>👁️</span><span>Visualizações: <strong id="viewCount">0</strong></span>
+  </div>
+</footer>
+
+</div><!-- /page-content -->
+
+<!-- Three.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ── THREE.JS BACKGROUND ──────────────────────────────
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 200);
+  camera.position.z = 50;
+
+  // Particles
+  const count = 180;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const vel = new Float32Array(count * 3);
+  for(let i=0;i<count*3;i+=3){
+    pos[i]   = (Math.random()-0.5)*120;
+    pos[i+1] = (Math.random()-0.5)*80;
+    pos[i+2] = (Math.random()-0.5)*60;
+    vel[i]   = (Math.random()-0.5)*0.012;
+    vel[i+1] = (Math.random()-0.5)*0.012;
+    vel[i+2] = 0;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mat = new THREE.PointsMaterial({color:0xA78BFA, size:0.55, transparent:true, opacity:0.7, sizeAttenuation:true});
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // Lines connecting nearby particles
+  const lineMat = new THREE.LineBasicMaterial({color:0x7C3AED, transparent:true, opacity:0.12});
+  let linesMesh = null;
+  function buildLines(){
+    if(linesMesh) scene.remove(linesMesh);
+    const positions = geo.attributes.position.array;
+    const linePos = [];
+    const threshold = 18;
+    for(let i=0;i<count;i++){
+      for(let j=i+1;j<count;j++){
+        const dx = positions[i*3]-positions[j*3];
+        const dy = positions[i*3+1]-positions[j*3+1];
+        const d = Math.sqrt(dx*dx+dy*dy);
+        if(d<threshold){
+          linePos.push(positions[i*3],positions[i*3+1],positions[i*3+2]);
+          linePos.push(positions[j*3],positions[j*3+1],positions[j*3+2]);
+        }
+      }
+    }
+    const lg = new THREE.BufferGeometry();
+    lg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePos),3));
+    linesMesh = new THREE.LineSegments(lg, lineMat);
+    scene.add(linesMesh);
+  }
+
+  let frame = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    frame++;
+    const positions = geo.attributes.position.array;
+    for(let i=0;i<count*3;i+=3){
+      positions[i]   += vel[i];
+      positions[i+1] += vel[i+1];
+      if(Math.abs(positions[i])>60) vel[i]*=-1;
+      if(Math.abs(positions[i+1])>40) vel[i+1]*=-1;
+    }
+    geo.attributes.position.needsUpdate = true;
+    points.rotation.y += 0.0003;
+    if(frame%4===0) buildLines();
+    renderer.render(scene, camera);
+  }
+  animate();
+  buildLines();
+
+  window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+// ── THEME TOGGLE ─────────────────────────────────────
+const toggle = document.getElementById('themeToggle');
+if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
+toggle.addEventListener('click',()=>{
+  document.body.classList.toggle('light');
+  localStorage.setItem('theme', document.body.classList.contains('light')?'light':'dark');
+});
+
+// ── HERO WORDS ───────────────────────────────────────
+setTimeout(()=>{
+  ['w1','w2','w3','w4','w5','w6'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){el.style.opacity='1';el.style.transform='translateX(0)';}
+  });
+},100);
+
+// ── 3D CARD TILT ─────────────────────────────────────
+document.querySelectorAll('.project-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX-r.left)/r.width - 0.5;
+    const y = (e.clientY-r.top)/r.height - 0.5;
+    card.style.transform = `perspective(600px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateY(-6px)`;
+    card.style.setProperty('--mx', `${(x+0.5)*100}%`);
+    card.style.setProperty('--my', `${(y+0.5)*100}%`);
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+  });
+});
+
+// ── SCROLL ANIMATIONS ────────────────────────────────
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.12});
+document.querySelectorAll('.scroll-anim').forEach(el=>observer.observe(el));
+
+// ── SKILL TAGS STAGGER ───────────────────────────────
+const skillObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const tags = e.target.querySelectorAll('.skill-tag');
+      tags.forEach((t,i)=>{
+        setTimeout(()=>t.classList.add('skill-visible'),i*45);
+      });
+      skillObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+const skillsSection = document.querySelector('.skills-cloud');
+if(skillsSection) skillObs.observe(skillsSection.parentElement);
+
+// ── CERT STAGGER ─────────────────────────────────────
+const certObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const cards = e.target.querySelectorAll('.cert-card');
+      cards.forEach((c,i)=>setTimeout(()=>c.classList.add('cert-visible'),i*60));
+      certObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.05});
+const certsGrid = document.querySelector('.certs-grid');
+if(certsGrid) certObs.observe(certsGrid);
+
+// ── COUNTER ANIMATION ────────────────────────────────
+const counterObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el = e.target.querySelector('.stat-number[data-target]');
+    if(!el) return;
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix||'';
+    let start=0, dur=1200, startTime=null;
+    function step(ts){
+      if(!startTime) startTime=ts;
+      const p = Math.min((ts-startTime)/dur,1);
+      const ease = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(start+(target-start)*ease)+suffix;
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+    counterObs.unobserve(e.target);
+  });
+},{threshold:0.5});
+document.querySelectorAll('.stat-card').forEach(c=>counterObs.observe(c));
+
+// ── CONTACT FORM ─────────────────────────────────────
+document.getElementById('contactForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const btn=e.target.querySelector('.form-submit');
+  btn.textContent='Enviando...';btn.disabled=true;
+  setTimeout(()=>{
+    e.target.style.display='none';
+    document.getElementById('formSuccess').style.display='block';
+  },800);
+});
+
+// ── SUGGESTIONS ──────────────────────────────────────
+let suggestions = JSON.parse(localStorage.getItem('yg_suggestions')||'[]');
+function renderSuggestions(){
+  const list = document.getElementById('suggestionsList');
+  list.innerHTML = suggestions.length ? suggestions.map(s=>`
+    <div class="suggestion-item">
+      <div class="suggestion-header">
+        <span class="suggestion-category">${s.category}</span>
+        <span class="suggestion-date">${s.date}</span>
+      </div>
+      <p class="suggestion-text">${s.text}</p>
+      <p class="suggestion-author">— ${s.name||'Anônimo'}</p>
+    </div>`).join('') : '<p style="font-size:13px;color:var(--muted2);text-align:center;padding:16px;">Seja o primeiro a deixar uma sugestão!</p>';
+}
+renderSuggestions();
+document.getElementById('suggestionForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const text = document.getElementById('sug_text').value.trim();
+  if(!text) return;
+  suggestions.unshift({
+    name: document.getElementById('sug_name').value.trim()||'Anônimo',
+    category: document.getElementById('sug_category').value,
+    text,
+    date: new Date().toLocaleDateString('pt-BR')
+  });
+  localStorage.setItem('yg_suggestions',JSON.stringify(suggestions));
+  renderSuggestions();
+  e.target.reset();
+});
+
+// ── CONNECTIONS ──────────────────────────────────────
+let connections = JSON.parse(localStorage.getItem('yg_connections')||'[]');
+const typeLabel = {recruiter:'Recrutador(a)',colega:'Colega de dados',mentor:'Mentor(a)',parceiro:'Parceiro(a)',outro:'Outro'};
+function renderConnections(){
+  const list = document.getElementById('connectionsList');
+  list.innerHTML = connections.length ? connections.map(c=>`
+    <div class="connection-card">
+      <div class="connection-avatar">${c.name[0]||'?'}</div>
+      <div class="connection-info">
+        <span class="connection-name">${c.name}</span>
+        <span class="connection-type connection-type-${c.type}">${typeLabel[c.type]||c.type}</span>
+        ${c.message?`<p class="connection-message">"${c.message}"</p>`:''}
+      </div>
+    </div>`).join('') : '<p style="font-size:13px;color:var(--muted2);text-align:center;padding:16px;">Nenhuma conexão ainda. Seja o primeiro!</p>';
+}
+renderConnections();
+document.getElementById('networkForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name = document.getElementById('net_name').value.trim();
+  if(!name) return;
+  connections.unshift({
+    name,
+    type: document.getElementById('net_type').value,
+    message: document.getElementById('net_message').value.trim()
+  });
+  localStorage.setItem('yg_connections',JSON.stringify(connections));
+  renderConnections();
+  e.target.reset();
+});
+
+// ── HAMBURGER MENU ───────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+document.querySelectorAll('.mobile-link').forEach(link=>{
+  link.addEventListener('click',()=>{
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
+
+// ── VIEW COUNTER ─────────────────────────────────────
+const vc = parseInt(localStorage.getItem('yg_views')||'0')+1;
+localStorage.setItem('yg_views',vc);
+document.getElementById('viewCount').textContent = vc;
+</script>
+</body>
+</html>
