@@ -843,6 +843,23 @@ footer a:hover{opacity:1;}
 <!-- Three.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyDrBKtSEy5z7KpGEM1ivZ0G59ylF6Y2CUc",
+    authDomain: "portifolio-yasmin.firebaseapp.com",
+    projectId: "portifolio-yasmin",
+    storageBucket: "portifolio-yasmin.firebasestorage.app",
+    messagingSenderId: "567629627183",
+    appId: "1:567629627183:web:24d6e5aa18c317af072bda",
+    measurementId: "G-DZRM0DJZ61"
+  };
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
 <script>
 // ── THREE.JS BACKGROUND ──────────────────────────────
 (function(){
