@@ -1,0 +1,83 @@
+// ============================================================
+// PÁGINA 7 — SIMULADOR DE CENÁRIOS
+// ============================================================
+//
+// CONFIGURAÇÃO DOS PARÂMETROS (Modelagem > Novo Parâmetro):
+//   Nome: "Redução de Churn %"
+//   Tipo: Número decimal
+//   Mínimo: 0.01   Máximo: 0.30   Incremento: 0.01   Padrão: 0.05
+//   Isso cria automaticamente a tabela [Redução de Churn %] e a medida selecionada.
+//
+//   Nome: "Custo de Retenção por Cliente (R$)"
+//   Tipo: Número inteiro
+//   Mínimo: 50   Máximo: 500   Incremento: 50   Padrão: 150
+// ============================================================
+
+// --- Clientes salvos com a redução simulada ---
+
+Clientes Salvos =
+ROUND(
+    [Clientes Cancelados] * 'Redução de Churn %'[Redução de Churn % Value],
+    0
+)
+
+// --- Receita recuperada ---
+
+Receita Média por Cliente Cancelado =
+DIVIDE([Receita Perdida por Churn], [Clientes Cancelados], 0)
+
+Receita Recuperada Simulada =
+[Clientes Salvos] * [Receita Média por Cliente Cancelado]
+
+// --- Custo da campanha de retenção ---
+
+Custo Total Retencao =
+[Clientes Salvos] * 'Custo de Retenção por Cliente (R$)'[Custo de Retenção por Cliente (R$) Value]
+
+// --- ROI da campanha ---
+
+ROI Simulado =
+DIVIDE(
+    [Receita Recuperada Simulada] - [Custo Total Retencao],
+    [Custo Total Retencao],
+    0
+)
+
+ROI Simulado % =
+FORMAT([ROI Simulado], "0.0%")
+
+// --- Nova taxa de churn após redução ---
+
+Nova Taxa Churn Simulada =
+[Taxa de Churn %] * (1 - 'Redução de Churn %'[Redução de Churn % Value])
+
+// --- Novos clientes cancelados após redução ---
+
+Novos Cancelamentos Simulados =
+[Clientes Cancelados] - [Clientes Salvos]
+
+// --- Cenários pré-definidos para cards de referência ---
+
+Receita Recuperada 5% =
+CALCULATE(
+    ROUND([Clientes Cancelados] * 0.05, 0) * [Receita Média por Cliente Cancelado]
+)
+
+Receita Recuperada 10% =
+CALCULATE(
+    ROUND([Clientes Cancelados] * 0.10, 0) * [Receita Média por Cliente Cancelado]
+)
+
+Receita Recuperada 15% =
+CALCULATE(
+    ROUND([Clientes Cancelados] * 0.15, 0) * [Receita Média por Cliente Cancelado]
+)
+
+// --- Payback em meses ---
+
+Payback Meses =
+DIVIDE(
+    [Custo Total Retencao],
+    [Receita Recuperada Simulada] / 12,
+    0
+)

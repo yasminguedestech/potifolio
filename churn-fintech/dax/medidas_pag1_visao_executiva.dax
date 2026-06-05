@@ -1,0 +1,89 @@
+// ============================================================
+// PÁGINA 1 — VISÃO EXECUTIVA
+// Tabela de medidas: [Medidas_Executiva]
+// ============================================================
+
+// --- KPIs Base ---
+
+Total de Clientes =
+COUNTROWS(Clientes)
+
+Clientes Ativos =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Status_Churn] = "Ativo"
+)
+
+Clientes Cancelados =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Status_Churn] = "Cancelou"
+)
+
+Taxa de Churn % =
+DIVIDE(
+    [Clientes Cancelados],
+    [Total de Clientes],
+    0
+)
+
+// --- Receita ---
+
+Receita Total =
+SUMX(Clientes, Clientes[Receita_Estimada])
+
+Receita Perdida por Churn =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Churn] = 1
+)
+
+Receita em Risco =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Nivel_Risco] = "Alto Risco"
+)
+
+Ticket Médio =
+DIVIDE(
+    [Receita Total],
+    [Total de Clientes],
+    0
+)
+
+// --- Tempo médio de permanência ---
+
+Tempo Médio de Permanência (anos) =
+AVERAGE(Clientes[Tempo_Conta_Anos])
+
+// --- Variações para cartões de tendência ---
+
+% Receita Perdida sobre Total =
+DIVIDE(
+    [Receita Perdida por Churn],
+    [Receita Total],
+    0
+)
+
+Clientes em Alto Risco =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Nivel_Risco] = "Alto Risco"
+)
+
+% Clientes em Alto Risco =
+DIVIDE(
+    [Clientes em Alto Risco],
+    [Total de Clientes],
+    0
+)
+
+// --- Evolução do churn por cohorte de tempo de conta ---
+// (usado em gráfico de linha: eixo X = Cohort_Tempo)
+
+Taxa Churn por Cohort =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)

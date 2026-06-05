@@ -1,0 +1,86 @@
+// ============================================================
+// PÁGINA 3 — USO DE PRODUTOS FINANCEIROS
+// ============================================================
+
+// --- Distribuição de produtos ---
+
+Clientes por Qtd Produtos =
+COUNTROWS(Clientes)
+// Usar com eixo = Qtd_Produtos
+
+Taxa Churn por Qtd Produtos =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Usar com eixo = Qtd_Produtos (gráfico de linha sobreposto)
+
+// --- Receita por número de produtos ---
+
+Receita por Qtd Produtos =
+SUMX(Clientes, Clientes[Receita_Estimada])
+
+Receita Perdida por Qtd Produtos =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Churn] = 1
+)
+
+// --- Engajamento: cartão de crédito x churn ---
+
+Taxa Churn Com Cartao =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Tem_CartaoCredito] = "Sim"
+)
+
+Taxa Churn Sem Cartao =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Tem_CartaoCredito] = "Não"
+)
+
+// --- Engajamento: membro ativo x churn ---
+
+Taxa Churn Membros Ativos =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Membro_Ativo] = "Sim"
+)
+
+Taxa Churn Membros Inativos =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Membro_Ativo] = "Não"
+)
+
+// --- Scatter: Saldo vs Salário colorido por Churn ---
+// (campos diretos da tabela — não precisa de medida DAX específica)
+// Eixo X = Saldo, Eixo Y = Salario_Estimado, Cor = Status_Churn, Tamanho = Qtd_Produtos
+
+// --- Proporção de cancelamento por combinação produto x atividade ---
+
+Churn Matriz Produto Atividade =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Linha = Qtd_Produtos, Coluna = Membro_Ativo

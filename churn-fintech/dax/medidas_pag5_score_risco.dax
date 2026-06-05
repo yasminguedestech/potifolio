@@ -1,0 +1,83 @@
+// ============================================================
+// PÁGINA 5 — SCORE DE RISCO DE CHURN
+// ============================================================
+
+// --- Distribuição por nível de risco ---
+
+Clientes Baixo Risco =
+CALCULATE(COUNTROWS(Clientes), Clientes[Nivel_Risco] = "Baixo Risco")
+
+Clientes Medio Risco =
+CALCULATE(COUNTROWS(Clientes), Clientes[Nivel_Risco] = "Médio Risco")
+
+Clientes Alto Risco =
+CALCULATE(COUNTROWS(Clientes), Clientes[Nivel_Risco] = "Alto Risco")
+
+% Clientes Alto Risco =
+DIVIDE([Clientes Alto Risco], [Total de Clientes], 0)
+
+// --- Receita em risco por nível ---
+
+Receita Baixo Risco =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Nivel_Risco] = "Baixo Risco"
+)
+
+Receita Medio Risco =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Nivel_Risco] = "Médio Risco"
+)
+
+Receita Alto Risco =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Nivel_Risco] = "Alto Risco"
+)
+
+% Receita em Alto Risco =
+DIVIDE(
+    [Receita Alto Risco],
+    [Receita Total],
+    0
+)
+
+// --- Score médio ---
+
+Score Risco Médio =
+AVERAGE(Clientes[Score_Risco])
+
+Score Risco Médio Cancelados =
+CALCULATE(AVERAGE(Clientes[Score_Risco]), Clientes[Churn] = 1)
+
+Score Risco Médio Ativos =
+CALCULATE(AVERAGE(Clientes[Score_Risco]), Clientes[Churn] = 0)
+
+// --- Top clientes críticos (tabela ranking) ---
+// Campos sugeridos na tabela:
+//   ID_Cliente | Segmento_Valor | Score_Risco | Nivel_Risco | Receita_Estimada | Saldo | Membro_Ativo
+// Ordenar por Score_Risco DESC
+// Filtrar: Nivel_Risco = "Alto Risco"
+
+// --- Validação do score: churn real vs nível de risco ---
+
+Taxa Churn Real em Alto Risco =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Nivel_Risco] = "Alto Risco"
+)
+
+Taxa Churn Real em Baixo Risco =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Nivel_Risco] = "Baixo Risco"
+)

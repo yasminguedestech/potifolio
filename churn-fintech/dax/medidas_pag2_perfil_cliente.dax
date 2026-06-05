@@ -1,0 +1,78 @@
+// ============================================================
+// PÁGINA 2 — PERFIL DO CLIENTE QUE CANCELA
+// ============================================================
+
+Taxa Churn por Faixa Etária =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Usar com eixo = Faixa_Etaria
+
+Taxa Churn por Gênero =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Usar com eixo = Genero
+
+Taxa Churn por País =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Usar com eixo = Pais
+
+Taxa Churn por Faixa Salarial =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Usar com eixo = Faixa_Salarial
+
+// --- Contagens para barras empilhadas ---
+
+Cancelados por Grupo =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Churn] = 1
+)
+
+Ativos por Grupo =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Churn] = 0
+)
+
+// --- Perfil do cliente cancelado (para heatmap) ---
+// Combina gênero x faixa etária
+
+Churn Heatmap (Genero x Idade) =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Linha = Genero, Coluna = Faixa_Etaria, Valor = esta medida
+
+// --- Insight de maior risco ---
+
+Faixa Etária Maior Churn =
+VAR _tabela =
+    ADDCOLUMNS(
+        VALUES(Clientes[Faixa_Etaria]),
+        "TaxaChurn",
+        CALCULATE(
+            DIVIDE(
+                CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+                COUNTROWS(Clientes),
+                0
+            )
+        )
+    )
+RETURN
+    MAXX(_tabela, [TaxaChurn])

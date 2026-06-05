@@ -1,0 +1,98 @@
+// ============================================================
+// PÁGINA 8 — MODELO PREDITIVO DE CHURN
+// (Após importar o arquivo ml/outputs/predicoes_churn.xlsx
+//  como tabela "Predicoes" no Power BI e fazer relacionamento
+//  com Clientes via ID_Cliente)
+// ============================================================
+
+// --- Métricas do modelo (valores vindos da aba Metricas_Modelos) ---
+// Use cartões de KPI apontando para a tabela Metricas_Modelos
+// Filtrado pelo melhor modelo (ex: Random Forest)
+
+Accuracy Modelo =
+CALCULATE(
+    MAX(Metricas_Modelos[Accuracy]),
+    Metricas_Modelos[Modelo] = "Random Forest"
+)
+
+Precision Modelo =
+CALCULATE(
+    MAX(Metricas_Modelos[Precision]),
+    Metricas_Modelos[Modelo] = "Random Forest"
+)
+
+Recall Modelo =
+CALCULATE(
+    MAX(Metricas_Modelos[Recall]),
+    Metricas_Modelos[Modelo] = "Random Forest"
+)
+
+F1 Score Modelo =
+CALCULATE(
+    MAX(Metricas_Modelos[F1-Score]),
+    Metricas_Modelos[Modelo] = "Random Forest"
+)
+
+// --- Probabilidade média de churn ---
+
+Prob Churn Média =
+AVERAGE(Predicoes[Prob_Churn])
+
+Prob Churn Média Alto Risco ML =
+CALCULATE(
+    AVERAGE(Predicoes[Prob_Churn]),
+    Predicoes[Nivel_Risco_ML] = "Alto Risco"
+)
+
+// --- Contagem por nível de risco ML ---
+
+Clientes Alto Risco ML =
+CALCULATE(
+    COUNTROWS(Predicoes),
+    Predicoes[Nivel_Risco_ML] = "Alto Risco"
+)
+
+% Alto Risco ML =
+DIVIDE(
+    [Clientes Alto Risco ML],
+    COUNTROWS(Predicoes),
+    0
+)
+
+// --- Concordância modelo vs churn real ---
+
+Acertos Modelo =
+CALCULATE(
+    COUNTROWS(Predicoes),
+    Predicoes[Churn] = Predicoes[Previsao_Churn]
+)
+
+% Acertos =
+DIVIDE([Acertos Modelo], COUNTROWS(Predicoes), 0)
+
+// --- Para o gráfico de importância das variáveis ---
+// Tabela: Importancia_Vars (da aba do Excel)
+// Visual: gráfico de barras horizontais ordenado por Importancia_Pct DESC
+// Eixo Y = Variavel, Eixo X = Importancia_Pct
+
+Importancia Máxima =
+MAX(Importancia_Vars[Importancia_Pct])
+
+// --- Distribuição de probabilidade de churn ---
+// Histograma: eixo X = Prob_Churn (em faixas de 10), eixo Y = contagem
+// Use coluna calculada na tabela Predicoes:
+
+// Faixa Prob Churn =
+// SWITCH(
+//     TRUE(),
+//     Predicoes[Prob_Churn] < 10,  "0-10%",
+//     Predicoes[Prob_Churn] < 20,  "10-20%",
+//     Predicoes[Prob_Churn] < 30,  "20-30%",
+//     Predicoes[Prob_Churn] < 40,  "30-40%",
+//     Predicoes[Prob_Churn] < 50,  "40-50%",
+//     Predicoes[Prob_Churn] < 60,  "50-60%",
+//     Predicoes[Prob_Churn] < 70,  "60-70%",
+//     Predicoes[Prob_Churn] < 80,  "70-80%",
+//     Predicoes[Prob_Churn] < 90,  "80-90%",
+//                                  "90-100%"
+// )

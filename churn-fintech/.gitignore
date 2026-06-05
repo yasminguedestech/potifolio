@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+debug_p8.py
+data/raw/
+ml/outputs/predicoes_churn.xlsx

@@ -1,0 +1,76 @@
+// ============================================================
+// PÁGINA 4 — RECEITA E SEGMENTAÇÃO DE CLIENTES
+// ============================================================
+
+// --- KPIs por segmento ---
+
+Receita por Segmento =
+SUMX(Clientes, Clientes[Receita_Estimada])
+// Usar com eixo = Segmento_Valor
+
+Receita Perdida por Segmento =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Churn] = 1
+)
+
+Taxa Churn por Segmento =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+
+% Receita do Segmento sobre Total =
+DIVIDE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    CALCULATE(SUMX(ALL(Clientes), Clientes[Receita_Estimada])),
+    0
+)
+
+// --- Clientes de alto valor cancelados ---
+
+Alto Valor Cancelados =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Segmento_Valor] = "Alto Valor",
+    Clientes[Churn] = 1
+)
+
+Receita Alto Valor Perdida =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Segmento_Valor] = "Alto Valor",
+    Clientes[Churn] = 1
+)
+
+% Alto Valor Perdido =
+DIVIDE(
+    [Receita Alto Valor Perdida],
+    CALCULATE(
+        SUMX(Clientes, Clientes[Receita_Estimada]),
+        Clientes[Segmento_Valor] = "Alto Valor"
+    ),
+    0
+)
+
+// --- Pareto 80/20: receita acumulada por segmento ---
+
+Receita Acumulada Pareto =
+VAR _receita_atual = SUMX(Clientes, Clientes[Receita_Estimada])
+VAR _total = CALCULATE(SUMX(ALL(Clientes), Clientes[Receita_Estimada]))
+RETURN
+    DIVIDE(_receita_atual, _total, 0)
+// Para usar no visual de Pareto: ordene por Receita_Estimada DESC
+
+// --- Treemap ---
+// Campos: Categoria = Segmento_Valor, Valor = Receita por Segmento
+// Dica: adicione Pais como subcategoria para drill-down
+
+// --- Distribuição de saldo por segmento ---
+
+Saldo Médio por Segmento =
+AVERAGE(Clientes[Saldo])
+
+Saldo Total por Segmento =
+SUM(Clientes[Saldo])

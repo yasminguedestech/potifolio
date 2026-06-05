@@ -1,0 +1,71 @@
+// ============================================================
+// PÁGINA 6 — JORNADA DO CLIENTE
+// ============================================================
+
+// --- Churn por tempo de conta ---
+
+Taxa Churn por Cohort =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Eixo X = Cohort_Tempo (0-1 anos, 2-3 anos, ..., 8+ anos)
+
+Cancelados por Cohort =
+CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1)
+
+// --- Tempo médio até cancelamento ---
+
+Tempo Médio Cancelamento (meses) =
+CALCULATE(
+    AVERAGE(Clientes[Meses_Ate_Cancelamento]),
+    Clientes[Churn] = 1
+)
+
+// --- Curva de retenção (sobrevivência simplificada) ---
+// Taxa de retenção acumulada por cohort de tempo
+
+Taxa Retencao Cohort =
+VAR _total_cohort = COUNTROWS(Clientes)
+VAR _cancelados = CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1)
+RETURN
+    DIVIDE(_total_cohort - _cancelados, _total_cohort, 0)
+// Eixo X = Cohort_Tempo, valor = esta medida → gráfico de área/linha
+
+// --- Heatmap: Tempo de conta x Número de produtos ---
+
+Churn Heatmap Tempo Produtos =
+DIVIDE(
+    CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+    COUNTROWS(Clientes),
+    0
+)
+// Linha = Cohort_Tempo, Coluna = Qtd_Produtos
+
+// --- Risco crescente por tempo ---
+
+Score Risco Médio por Cohort =
+AVERAGE(Clientes[Score_Risco])
+
+// --- Análise: primeiro ano é o mais crítico? ---
+
+Taxa Churn Primeiro Ano =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Cohort_Tempo] = "0-1 anos"
+)
+
+Taxa Churn Clientes Veteranos =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Cohort_Tempo] = "8+ anos"
+)

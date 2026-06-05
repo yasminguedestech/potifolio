@@ -1,0 +1,107 @@
+// ============================================================
+// PÁGINA 9 — RECOMENDAÇÕES ESTRATÉGICAS
+// ============================================================
+// Esta página é predominantemente visual (cards, ícones, texto).
+// As medidas abaixo alimentam os cards de impacto financeiro
+// em cada recomendação.
+// ============================================================
+
+// --- Recomendação 1: Cross-sell para clientes com 1 produto ---
+
+Clientes 1 Produto Ativos =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Qtd_Produtos] = 1,
+    Clientes[Churn] = 0
+)
+
+Receita em Risco 1 Produto =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Qtd_Produtos] = 1,
+    Clientes[Churn] = 1
+)
+
+Taxa Churn 1 Produto =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Qtd_Produtos] = 1
+)
+
+// --- Recomendação 2: Reengajamento de membros inativos ---
+
+Membros Inativos Ativos =
+CALCULATE(
+    COUNTROWS(Clientes),
+    Clientes[Membro_Ativo] = "Não",
+    Clientes[Churn] = 0
+)
+
+Receita em Risco Inativos =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Membro_Ativo] = "Não",
+    Clientes[Churn] = 1
+)
+
+// --- Recomendação 3: Foco em clientes 46-55 anos ---
+
+Taxa Churn 46 55 =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Faixa_Etaria] = "46-55"
+)
+
+Receita Perdida 46 55 =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Faixa_Etaria] = "46-55",
+    Clientes[Churn] = 1
+)
+
+// --- Recomendação 4: Retenção proativa de alto valor ---
+
+Taxa Churn Alto Valor =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Segmento_Valor] = "Alto Valor"
+)
+
+Receita Perdida Alto Valor =
+CALCULATE(
+    SUMX(Clientes, Clientes[Receita_Estimada]),
+    Clientes[Segmento_Valor] = "Alto Valor",
+    Clientes[Churn] = 1
+)
+
+// --- Recomendação 5: Onboarding nos primeiros 2 anos ---
+
+Taxa Churn Anos 0 1 2 =
+CALCULATE(
+    DIVIDE(
+        CALCULATE(COUNTROWS(Clientes), Clientes[Churn] = 1),
+        COUNTROWS(Clientes),
+        0
+    ),
+    Clientes[Tempo_Conta_Anos] <= 2
+)
+
+// --- Score geral de oportunidade de retenção ---
+
+Potencial Total de Retenção (R$) =
+[Receita em Risco 1 Produto]
++ [Receita em Risco Inativos]
++ [Receita Perdida 46 55]
++ [Receita Perdida Alto Valor]
