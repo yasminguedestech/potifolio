@@ -222,7 +222,7 @@ body.light .theme-toggle-icon.moon{opacity:1;}
   transform:rotateY(-4deg) rotateX(3deg) translateY(-6px);
   box-shadow:12px 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--glow);
 }
-.photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;}
+.photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%;}
 .photo-overlay{
   position:absolute;inset:0;
   background:linear-gradient(to bottom, transparent 55%, rgba(15,14,26,0.65));
@@ -299,9 +299,9 @@ body.light .sobre-text .highlight{color:var(--accent3);}
   box-shadow:0 6px 24px var(--glow);
 }
 .skill-highlight{
-  font-weight:600;color:var(--text);
-  border-color:var(--muted2);
-  background:var(--surface2);
+  color:var(--tag-text);
+  border-color:var(--border);
+  background:var(--tag-bg);
 }
 
 /* ─── PROJECTS ─── */
@@ -643,6 +643,21 @@ footer a:hover{opacity:1;}
 <section id="projetos">
   <p class="section-label scroll-anim">Projetos</p>
   <div class="projects-grid">
+
+    <div class="project-card scroll-anim">
+      <div class="project-top">
+        <div class="project-icon">🚖</div>
+        <span class="badge badge-done">Concluído</span>
+      </div>
+      <p class="project-name">Retenção de Motoristas — 99</p>
+      <p class="project-desc">O que faz um motorista abandonar a plataforma? Analisei 1.200 registros simulados de parceiros da 99 e identifiquei os principais fatores de churn: ganho semanal abaixo de R$500, baixo engajamento nos primeiros 6 meses e ausência de bônus. Resultado: recomendações de retenção baseadas em dados.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span><span class="ptag">Pandas</span><span class="ptag">Matplotlib</span><span class="ptag">Seaborn</span>
+      </div>
+      <a class="project-link" href="https://github.com/yasminguedestech/retencao-motoristas-99" target="_blank">
+        Ver no GitHub ↗
+      </a>
+    </div>
 
     <div class="project-card scroll-anim">
       <div class="project-top">
