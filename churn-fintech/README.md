@@ -127,12 +127,22 @@ churn-fintech/
 
 ---
 
-## 🛠️ Stack
+## 🛠️ Ferramentas Utilizadas
 
-- **Python** — pandas, numpy, scikit-learn, XGBoost
-- **Visualização** — Plotly, Dash, Dash Bootstrap Components
-- **Machine Learning** — Random Forest, XGBoost, Regressão Logística
-- **Dataset** — [Bank Customer Churn — Kaggle](https://www.kaggle.com/datasets/radheshyamkollipara/bank-customer-churn)
+| Categoria | Ferramenta | Uso |
+|-----------|-----------|-----|
+| Linguagem | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) | Desenvolvimento completo |
+| Dashboard | ![Dash](https://img.shields.io/badge/Dash-008DE4?style=flat&logo=plotly&logoColor=white) | Interface interativa web |
+| Visualização | ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=flat&logo=plotly&logoColor=white) | Gráficos e charts |
+| Dados | ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white) | Manipulação e análise |
+| Numérico | ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white) | Cálculos e arrays |
+| ML | ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white) | Random Forest, Regressão Logística |
+| ML | ![XGBoost](https://img.shields.io/badge/XGBoost-337AB7?style=flat) | Modelo de gradient boosting |
+| Estilo | ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=bootstrap&logoColor=white) | Layout responsivo |
+| Dados | ![Excel](https://img.shields.io/badge/Excel-217346?style=flat&logo=microsoft-excel&logoColor=white) | Exportação dos datasets |
+| Versionamento | ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) | Controle de versão |
+| Repositório | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) | Hospedagem do projeto |
+| Dataset | [Bank Customer Churn — Kaggle](https://www.kaggle.com/datasets/radheshyamkollipara/bank-customer-churn) | Base de dados |
 
 ---
 
