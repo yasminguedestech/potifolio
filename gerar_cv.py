@@ -242,6 +242,7 @@ certs = [
     "Customer Success na Prática · Udemy · 2h · Mai/2026",
     "Python 101 for Data Science · IBM (International Business Machines) · 10h · Mai/2026",
     "Nano Course Big Data & Analytics · FIAP · 60h · Mai/2026",
+    "Nano Course DevOps & Agile Culture · FIAP · 60h · Jun/2026",
     "Business Intelligence (BI) · FIAP · 40h · Mai/2026",
     "Criar Relatórios Eficazes no Power BI · Microsoft · 40h · Mai/2026",
     "Fundamentos da Gestão por Processos · FGV · 14h · Mai/2026",
