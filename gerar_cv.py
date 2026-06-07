@@ -173,7 +173,7 @@ projetos = [
     {
         "titulo": "Retenção de Motoristas — Contexto 99",
         "tech": "Python, Pandas, NumPy, Matplotlib, Seaborn, Jupyter Notebook",
-        "desc": "Análise de dados focada em identificar os principais fatores de churn de motoristas em plataformas de ride hailing, gerando insumos para ações de retenção.",
+        "desc": "Análise de dados focada em identificar os principais fatores de churn de motoristas em plataformas de ride hailing, gerando insumos para ações de retenção. (Dados simulados)",
         "bullets": [
             "Dataset com 1.200 registros e 9 variáveis: cidade, engajamento, avaliação, ganho e cancelamentos.",
             "Ganho semanal abaixo de R$ 500 identificado como principal driver de saída da plataforma.",
@@ -183,7 +183,7 @@ projetos = [
     {
         "titulo": "Customer Health Score — Dashboard SaaS",
         "tech": "Python, Dash, Plotly, Pandas, NumPy, Bootstrap",
-        "desc": "Dashboard interativo para identificação proativa de clientes SaaS em risco de churn, consolidando métricas de engajamento, satisfação, suporte e financeiro.",
+        "desc": "Dashboard interativo para identificação proativa de clientes SaaS em risco de churn, consolidando métricas de engajamento, satisfação, suporte e financeiro. (Dados simulados)",
         "bullets": [
             "500 clientes analisados; 14,6% classificados em risco, representando R$ 79K de MRR sob ameaça.",
             "Modelo ponderado: engajamento (40%), satisfação (30%), suporte (20%) e financeiro (10%).",
@@ -193,7 +193,7 @@ projetos = [
     {
         "titulo": "Knowledge Analytics — Mapeamento de Dúvidas e IA",
         "tech": "Python, Dash, Plotly, Pandas, NumPy, Bootstrap",
-        "desc": "Dashboard operacional que identifica dúvidas internas recorrentes em empresas, estimando impacto financeiro e oportunidades de automação com IA.",
+        "desc": "Dashboard operacional que identifica dúvidas internas recorrentes em empresas, estimando impacto financeiro e oportunidades de automação com IA. (Dados simulados)",
         "bullets": [
             "Análise de 3.500 solicitações/ano revelando 7.106 horas consumidas em respostas duplicadas.",
             "\"Acessos e Senhas\" identificado como categoria mais frequente (22%), com 95% de potencial de automação.",
@@ -230,7 +230,7 @@ c.setFont(NORMAL, 9)
 c.drawRightString(W - MR, y, "mar. 2023 – dez. 2026")
 y -= 13
 c.setFont(NORMAL, 10)
-c.drawString(ML, y, "Bacharelado em Biomedicina — cursando 8º semestre")
+c.drawString(ML, y, "Bacharelado em Biomedicina — Cursando 8º Semestre")
 y -= 18
 
 # Certificações
