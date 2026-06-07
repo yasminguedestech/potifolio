@@ -248,6 +248,7 @@ certs = [
     "Fundamentos da Gestão por Processos · FGV · 14h · Mai/2026",
     "Kanban e Ferramentas Ágeis de Gestão de Projetos · FGV · 5h · Mai/2026",
     "Power BI com IA · Rocketseat · 6h · Jun/2026",
+    "Understanding Data Engineering · DataCamp · 2h · Jun/2026",
 ]
 for cert in certs:
     y = draw_bullet(c, cert, ML + 2, y, size=10, lh=13)
